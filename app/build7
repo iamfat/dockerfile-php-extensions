@@ -40,3 +40,10 @@ cd /tmp/xdebug && git checkout XDEBUG_2_5_2 \
     && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 && make && make install && \
     cp /usr/lib/php7/modules/xdebug.so $BUILD_DIR
 
+# install friso
+[ ! -d /tmp/friso ] && git clone https://git.oschina.net/lionsoul/friso.git /tmp/friso
+cd /tmp/friso/src && make && make install && cp /usr/lib/libfriso.so $BUILD_DIR
+
+ldconfig
+cd /tmp/friso/vendors/binding/php7 && phpize7 && ./configure && \
+    make && make install && cp /usr/lib/php/modules/friso.so $BUILD_DIR

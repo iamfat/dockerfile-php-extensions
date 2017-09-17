@@ -36,7 +36,7 @@ cd /tmp/uopz && \
 cd /tmp/friso/src && make && make install && cp /usr/lib/libfriso.so $BUILD_DIR
 
 ldconfig
-cd /tmp/friso/binding/php && ln -sf ../../src friso && phpize && ./configure EXTRA_LDFLAGS=-lfriso && \
+cd /tmp/friso/vendors/binding/php5 && phpize && ./configure && \
     make && make install && cp /usr/lib/php/modules/friso.so $BUILD_DIR
 
 # install xdebug
