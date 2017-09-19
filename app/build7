@@ -7,43 +7,53 @@ BUILD_DIR=/build/php-$PHP_VERSION_ID
 
 mkdir -p $BUILD_DIR
 
-# install redis
+# build redis
 apk add php7-session
 [ ! -d /tmp/phpredis ] && git clone https://github.com/phpredis/phpredis.git /tmp/phpredis
-cd /tmp/phpredis && git checkout 3.1.3 \
+cd /tmp/phpredis && git reset --hard && git checkout master && git pull --rebase --autostash && git checkout 3.1.3 \
     && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 && make && make install && \
     cp /usr/lib/php7/modules/redis.so $BUILD_DIR
 
-# install yaml
+# build yaml
 apk add yaml-dev
 [ ! -d /tmp/yaml ] && git clone https://github.com/php/pecl-file_formats-yaml.git /tmp/yaml
-cd /tmp/yaml && git checkout 2.0.2 \
+cd /tmp/yaml && git reset --hard && git checkout master && git pull --rebase --autostash && git checkout 2.0.2 \
     && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 && make && make install && \
     cp /usr/lib/php7/modules/yaml.so $BUILD_DIR
 
-# install zmq
+# build zmq
 apk add zeromq-dev
 [ ! -d /tmp/zmq ] && git clone https://github.com/mkoppanen/php-zmq.git /tmp/zmq
-cd /tmp/zmq && git checkout php7 \
+cd /tmp/zmq && git reset --hard && git checkout master && git pull --rebase --autostash && git checkout php7 \
     && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 && make && make install && \
     cp /usr/lib/php7/modules/zmq.so $BUILD_DIR
 
-# install uopz
+# build uopz
 # [ ! -d /tmp/uopz ] && git clone https://github.com/krakjoe/uopz.git /tmp/uopz
-# cd /tmp/uopz && git checkout v5.0.1 \
+# cd /tmp/uopz && git reset --hard && git checkout master && git pull --rebase --autostash && git checkout v5.0.1 \
 #    && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 && make && make install && \
 #    cp /usr/lib/php7/modules/uopz.so $BUILD_DIR
 
-# install xdebug
+# build xdebug
 [ ! -d /tmp/xdebug ] && git clone https://github.com/xdebug/xdebug.git /tmp/xdebug
-cd /tmp/xdebug && git checkout XDEBUG_2_5_2 \
-    && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 && make && make install && \
-    cp /usr/lib/php7/modules/xdebug.so $BUILD_DIR
+cd /tmp/xdebug && git reset --hard && git checkout master && git pull --rebase --autostash && git checkout XDEBUG_2_5_2 \
+    && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 \
+    && make && make install && cp /usr/lib/php7/modules/xdebug.so $BUILD_DIR
 
-# install friso
+# build friso
 [ ! -d /tmp/friso ] && git clone https://git.oschina.net/lionsoul/friso.git /tmp/friso
-cd /tmp/friso/src && make && make install && cp /usr/lib/libfriso.so $BUILD_DIR
+cd /tmp/friso/src && git reset --hard && git checkout master && git pull --rebase --autostash \
+    && make && make install && cp /usr/lib/libfriso.so $BUILD_DIR
 
 ldconfig
-cd /tmp/friso/vendors/binding/php7 && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 && \
-    make && make install && cp /usr/lib/php7/modules/friso.so $BUILD_DIR
+cd /tmp/friso/vendors/binding/php7 \
+    && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 \
+    && make && make install && cp /usr/lib/php7/modules/friso.so $BUILD_DIR
+
+# build swoole
+apk add linux-headers
+[ ! -d /tmp/swoole ] && git clone https://github.com/swoole/swoole-src.git /tmp/swoole
+cd /tmp/swoole && git reset --hard && git checkout master && git pull --rebase --autostash \
+    && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 \
+    && make && make install && cp /usr/lib/swoole.so $BUILD_DIR
+
