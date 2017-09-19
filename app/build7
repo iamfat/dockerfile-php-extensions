@@ -55,5 +55,5 @@ apk add linux-headers
 [ ! -d /tmp/swoole ] && git clone https://github.com/swoole/swoole-src.git /tmp/swoole
 cd /tmp/swoole && git reset --hard && git checkout master && git pull --rebase --autostash \
     && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 \
-    && make && make install && cp /usr/lib/swoole.so $BUILD_DIR
+    && make && make install && cp /usr/lib/php7/modules/swoole.so $BUILD_DIR
 
