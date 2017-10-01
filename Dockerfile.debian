@@ -1,7 +1,7 @@
 FROM debian:8
 MAINTAINER iamfat@gmail.com
 
-RUN apt-get update && apt-get install -y bash curl aptutils git php5-dev
+RUN apt-get update && apt-get install -y bash curl apt-utils git php5-dev
 
 ADD app/debian /app
 WORKDIR /app
