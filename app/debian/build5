@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# docker run --rm -t -v /root/dev-tmp:/tmp -v /root/build:/build genee/phpize
+# docker run --rm -t -v /root/dev-tmp:/tmp -v /root/build:/build genee/debian-php build5
 
 PHP_EXTENSION_DIR=$(echo '<?= PHP_EXTENSION_DIR ?>'|php5)
 PHP_MODULE_DIR=$(echo '<?= basename(PHP_EXTENSION_DIR) ?>'|php5)
@@ -8,6 +8,7 @@ BUILD_DIR=/build/debian
 PHP_BUILD_DIR=$BUILD_DIR/php-$PHP_MODULE_DIR
 
 mkdir -p $BUILD_DIR
+mkdir -p $PHP_BUILD_DIR
 
 # install yaml
 apt-get install -y libyaml-dev
@@ -20,3 +21,12 @@ cd /tmp/friso/src && make && make install && cp /usr/lib/libfriso.so $BUILD_DIR/
 ldconfig
 cd /tmp/friso/vendors/binding/php5 && phpize && ./configure && \
     make && make install && cp $PHP_EXTENSION_DIR/friso.so $PHP_BUILD_DIR/friso.so
+
+# install oci8
+apt-get install -y alien libaio1
+curl -sLo /tmp/oracle.rpm http://files.docker.genee.in/oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm
+alien -i /tmp/oracle.rpm
+curl -sLo /tmp/oracle-devel.rpm http://files.docker.genee.in/oracle-instantclient12.2-devel-12.2.0.1.0-1.x86_64.rpm
+alien -i /tmp/oracle-devel.rpm
+printf "\n" | pecl install oci8-2.0.12
+cp $PHP_EXTENSION_DIR/oci8.so $PHP_BUILD_DIR/oci8.so
