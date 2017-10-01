@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# docker run --rm -t -v /root/dev-tmp:/tmp -v /root/build:/build genee/phpize
+
+PHP_EXTENSION_DIR=$(echo '<?= PHP_EXTENSION_DIR ?>'|php5)
+PHP_MODULE_DIR=$(echo '<?= basename(PHP_EXTENSION_DIR) ?>'|php5)
+BUILD_DIR=/build/debian
+PHP_BUILD_DIR=$BUILD_DIR/php-$PHP_MODULE_DIR
+
+mkdir -p $BUILD_DIR
+
+# install yaml
+apt-get install -y libyaml-dev
+printf "\n" | pecl install yaml-1.3.1
+cp $PHP_EXTENSION_DIR/yaml.so $PHP_BUILD_DIR/yaml.so
+
+# install friso
+[ ! -d /tmp/friso ] && git clone https://git.oschina.net/lionsoul/friso.git /tmp/friso
+cd /tmp/friso/src && make && make install && cp /usr/lib/libfriso.so $BUILD_DIR/libfriso.so
+ldconfig
+cd /tmp/friso/vendors/binding/php5 && phpize && ./configure && \
+    make && make install && cp $PHP_EXTENSION_DIR/friso.so $PHP_BUILD_DIR/friso.so

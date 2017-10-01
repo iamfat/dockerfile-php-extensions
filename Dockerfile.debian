@@ -1,0 +1,10 @@
+FROM debian:8
+MAINTAINER iamfat@gmail.com
+
+RUN apt-get update && apt-get install -y bash curl aptutils git php5-dev
+
+ADD app /app
+WORKDIR /app
+ENV PATH="/app:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+CMD /app/build7
