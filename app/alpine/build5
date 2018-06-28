@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# docker run --rm -t -v /root/dev-tmp:/tmp -v /root/build:/build genee/phpize
+# docker run --rm -t -v /root/dev-tmp:/tmp -v /root/build:/build -v $PWD/app/alpine:/app genee/phpize
 
 PHP_VERSION_ID=$(echo '<?= PHP_VERSION_ID ?>'|php5)
 BUILD_DIR=/build/php-$PHP_VERSION_ID

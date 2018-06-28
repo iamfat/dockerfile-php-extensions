@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# docker run --rm -t -v /root/dev-tmp:/tmp -v /root/build:/build genee/debian-php build5
+# docker run --rm -t -v /root/dev-tmp:/tmp -v /root/build:/build -v $PWD/app/alpine:/app genee/debian-php build5
 
 PHP_EXTENSION_DIR=$(echo '<?= PHP_EXTENSION_DIR ?>'|php5)
 PHP_MODULE_DIR=$(echo '<?= basename(PHP_EXTENSION_DIR) ?>'|php5)
