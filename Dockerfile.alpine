@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.7
 MAINTAINER iamfat@gmail.com
 
 RUN apk update && apk add bash curl git php7-dev php5-dev autoconf binutils gcc g++ make
