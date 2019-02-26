@@ -8,7 +8,6 @@ BUILD_DIR=/build/alpine/php-$PHP_VERSION_ID
 mkdir -p $BUILD_DIR
 
 MODULE = $1
-exit 0
 
 # build redis
 if [ -z "$MODULE" || "$MODULE" == "redis"] ; then
@@ -38,10 +37,12 @@ if [ -z "$MODULE" || "$MODULE" == "zmq"] ; then
 fi
 
 # build uopz
-# [ ! -d /tmp/uopz ] && git clone https://github.com/krakjoe/uopz.git /tmp/uopz
-# cd /tmp/uopz && git reset --hard && git checkout master && git pull --rebase --autostash && git checkout v5.0.1 \
-#    && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 && make && make install && \
-#    cp /usr/lib/php7/modules/uopz.so $BUILD_DIR
+if [ -z "$MODULE" || "$MODULE" == "zmq"] ; then
+    [ ! -d /tmp/uopz ] && git clone https://github.com/krakjoe/uopz.git /tmp/uopz
+    cd /tmp/uopz && git reset --hard && git checkout master && git pull --rebase --autostash && git checkout v6.0.1 \
+    && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 --enable-uopz && make && make install && \
+    cp /usr/lib/php7/modules/uopz.so $BUILD_DIR
+fi
 
 # build xdebug
 if [ -z "$MODULE" || "$MODULE" == "xdebug"] ; then
