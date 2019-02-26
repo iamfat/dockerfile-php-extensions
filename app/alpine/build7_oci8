@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# docker run --rm -it -v /tmp/php7-build:/tmp -v /root/build:/build -v $PWD/app/alpine:/app genee/phpize build7
+
+PHP_VERSION_ID=$(echo "<?= PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION ?>"|php7)
+BUILD_DIR=/build/alpine/php-$PHP_VERSION_ID
+
+mkdir -p $BUILD_DIR
+
+# build oracle
+OCI8_VERSION=2.1.8
+apk add rpm libaio
+curl -sLo /tmp/oracle.rpm http://files.docker.genee.in/oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm
+curl -sLo /tmp/oracle-devel.rpm http://files.docker.genee.in/oracle-instantclient12.2-devel-12.2.0.1.0-1.x86_64.rpm
+rpm -i --nodeps /tmp/oracle.rpm /tmp/oracle-devel.rpm
+[ ! -d /tmp/oci8-${OCI8_VERSION} ] && curl -sL https://pecl.php.net/get/oci8-${OCI8_VERSION}.tgz | tar -zxf - -C /tmp
+cd /tmp/oci8-${OCI8_VERSION} && phpize7 && ./configure --with-php-config=/usr/bin/php-config7 \
+    && make && make install && cp /usr/lib/php7/modules/oci8.so $BUILD_DIR
+
+
+curl -sLo /tmp/oracle.rpm http://files.docker.genee.in/oracle-instantclient12.2-basic-12.2.0.1.0-1.x86_64.rpm
+curl -sLo /tmp/oracle-devel.rpm http://files.docker.genee.in/oracle-instantclient12.2-devel-12.2.0.1.0-1.x86_64.rpm
+
+printf "extension=oci8.so\n" > /etc/php7/conf.d/20_oci8.ini
+
+apk --update add automake gettext-dev libtirpc-dev libtool
+
+apk --update add gettext libtirpc libtool
+ln -s /usr/lib/libnsl.so.2 /lib/libnsl.so.1
+
+apk --no-cache add ca-certificates wget
+wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk
+wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk
+wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-bin-2.28-r0.apk
+apk add glibc-2.28-r0.apk glibc-bin-2.28-r0.apk
